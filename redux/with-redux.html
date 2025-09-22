@@ -1,0 +1,82 @@
+<html>
+    <head>
+        <script src="https://unpkg.com/redux@4.2.1/dist/redux.min.js"></script>
+    </head>
+    <body>
+        <style>
+            .container {
+                border: 5px solid #000;
+                padding: 10px;
+            }
+        </style>
+        <div id="red"></div>
+        <div id="blue"></div>
+        <div id="green"></div>
+        <script>
+            // reducer는 기존 state값과 action값을 받아 셋팅
+            function reducer(state, action) {
+                console.log(state, action);
+                // undefined일때 최초의 초기값을 셋팅해줌
+                if (state === undefined) {
+                    return { color: "yellow" }; // <--- 초기 state값
+                }
+
+                let newState;
+
+                if (action.type === "CHANGE_COLOR") {
+                    // 원본이 아닌 Object.assign()을 이용해 복제한 값으로 이용
+                    newState = Object.assign({}, state, { color: action.color });
+                }
+                return newState;
+            }
+            // createStore은 입력값으로 reducer를 받는다.
+            // 상수로 선언 후 사용
+            const store = Redux.createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+            // getState를 통해 state값을 가져옴
+            function red() {
+                let state = store.getState();
+                document.querySelector("#red").innerHTML = `
+                    <div class="container" id="component_red" style="background-color: ${state.color}">
+                        <h1>red</h1>    
+                        <input type="button" value="fire" onclick="
+                        // dispatch를 통해 state값을 변경 (action값), type은 필수로 작성
+                        store.dispatch({type: 'CHANGE_COLOR', color:'red'})
+                        ">
+                    </div>
+                `;
+            }
+            store.subscribe(red);
+            red();
+
+            function blue() {
+                let state = store.getState();
+                document.querySelector("#blue").innerHTML = `
+                    <div class="container" id="component_blue" style="background-color: ${state.color}">
+                        <h1>blue</h1>    
+                        <input type="button" value="fire" onclick="
+                        // dispatch를 통해 state값을 변경 (action값), type은 필수로 작성
+                        store.dispatch({type: 'CHANGE_COLOR', color:'blue'})
+                        ">
+                    </div>
+                `;
+            }
+            store.subscribe(blue);
+            blue();
+
+            function green() {
+                let state = store.getState();
+                document.querySelector("#green").innerHTML = `
+                    <div class="container" id="component_green" style="background-color: ${state.color}">
+                        <h1>green</h1>    
+                        <input type="button" value="fire" onclick="
+                        // dispatch를 통해 state값을 변경 (action값), type은 필수로 작성
+                        store.dispatch({type: 'CHANGE_COLOR', color:'green'})
+                        ">
+                    </div>
+                `;
+            }
+            store.subscribe(green);
+            green();
+        </script>
+    </body>
+</html>
